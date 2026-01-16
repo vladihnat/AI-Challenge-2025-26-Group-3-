@@ -1,12 +1,3 @@
-# Model file which contains a model class in scikit-learn style
-# The Model class must implement:
-# - __init__
-# - fit
-# - predict
-#
-# Created by: Ihsan Ullah
-# Created on: 13 Jan, 2026
-
 # ----------------------------------------
 # Imports
 # ----------------------------------------
@@ -19,7 +10,7 @@ from sklearn.linear_model import LogisticRegression
 # ----------------------------------------
 class Model:
     """
-    Simple scikit-learn style classification model.
+    Simple scikit-learn style classification model compatible with HDF5 arrays.
     """
 
     def __init__(self):
@@ -30,46 +21,48 @@ class Model:
 
         # Simple baseline classifier
         self.clf = LogisticRegression(
-            max_iter=1000,
+            max_iter=100, # Réduit pour tester rapidement
             solver="lbfgs"
         )
 
-    def fit(self, train_data):
+    def fit(self, X, y):
         """
         Train the model using training data.
 
         Parameters
         ----------
-        train_data : dict
-            Dictionary containing:
-                - "X": feature matrix
-                - "y": target labels
+        X : numpy.ndarray
+            Images ou caractéristiques (ex: [n_samples, height, width, channels])
+        y : numpy.ndarray
+            Labels (ex: [n_samples])
         """
-        print("[*] - Training Classifier on the train set")
+        print(f"[*] - Training Classifier on {X.shape[0]} samples")
 
-        X = np.array(train_data["X"])
-        y = np.array(train_data["y"])
+        # Redimensionnement : Si X est un bloc d'images (ex: 100x64x64), 
+        # on l'aplatit en (100, 4096) pour que la LogisticRegression comprenne.
+        if len(X.shape) > 2:
+            X = X.reshape(X.shape[0], -1)
 
         self.clf.fit(X, y)
 
-    def predict(self, test_data):
+    def predict(self, X):
         """
         Predict labels for test data.
 
         Parameters
         ----------
-        test_data : dict
-            Dictionary containing:
-                - "X": feature matrix
+        X : numpy.ndarray
+            Images ou caractéristiques de test.
 
         Returns
         -------
         y : numpy.ndarray
             Predicted labels
         """
-        print("[*] - Predicting test set using trained Classifier")
+        print(f"[*] - Predicting on {X.shape[0]} test samples")
 
-        X = np.array(test_data["X"])
-        y = self.clf.predict(X)
+        # Même transformation pour le test set
+        if len(X.shape) > 2:
+            X = X.reshape(X.shape[0], -1)
 
-        return y
+        return self.clf.predict(X)
