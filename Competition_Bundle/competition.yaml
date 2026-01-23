@@ -43,9 +43,22 @@ leaderboards:
   - index: 0 
     title: Results
     key: main_leaderboard
-    submission_rule: "Force_Latest_Multiple" # This can be changed, see the leaderboard rules here: https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Leaderboard-Functionality/#submission-rules
-    # you can add multiple columns if you have multiple scores
+    submission_rule: "Force_Latest_Multiple"
     columns:
       - index: 0
-        title: Score
-        key: score
+        title: Balanced Accuracy  # Nom affiché sur la colonne
+        key: balanced_accuracy   # Doit être identique à la clef dans scores.json
+        sort: desc               # Plus le score est haut, mieux c'est
+        precision: 3             # Nombre de décimales à afficher
+
+      - index: 1
+        title: F1 Score
+        key: f1_score
+        sort: desc
+        precision: 3
+
+      - index: 2
+        title: Average Precision
+        key: average_precision
+        sort: desc
+        precision: 3
