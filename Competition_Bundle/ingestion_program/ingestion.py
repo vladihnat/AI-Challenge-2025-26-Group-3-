@@ -1,32 +1,19 @@
-# ------------------------------------------
-# Imports
-# ------------------------------------------
 import os
 import json
 import h5py
 import numpy as np
 from datetime import datetime as dt
 
-
 class Ingestion:
-    """
-    Class handling the ingestion process for HDF5 data.
-    """
-
     def __init__(self):
         self.start_time = None
         self.end_time = None
         self.model = None
-        
-        # On sépare data et labels pour coller à la structure H5
         self.train_data = None
         self.train_labels = None
         self.test_data = None
-        
         self.predictions = None
         self.ingestion_result = None
-
-    # ... (start_timer, stop_timer, get_duration, save_duration restent identiques) ...
 
     def start_timer(self):
         self.start_time = dt.now()
@@ -39,89 +26,77 @@ class Ingestion:
             return None
         return self.end_time - self.start_time
 
-    def save_duration(self, output_dir=None):
+    def save_duration(self, output_dir):
         duration = self.get_duration()
         if duration is None: return
         duration_in_mins = duration.total_seconds() / 60
-        duration_file = os.path.join(output_dir, "ingestion_duration.json")
-        with open(duration_file, "w") as f:
+        with open(os.path.join(output_dir, "ingestion_duration.json"), "w") as f:
             json.dump({"ingestion_duration": duration_in_mins}, f, indent=4)
 
     # ------------------------------------------
-    # Data loading (Version H5)
+    # Data loading
     # ------------------------------------------
-
     def load_train_and_test_data(self, input_dir):
         """
-        Load training and testing data from H5 files.
+        Charge les images depuis H5 et les labels depuis NPY.
         """
         print(f"[*] Loading data from {input_dir}")
 
-        # Définition des chemins selon tes fichiers créés
+        # Chemins des fichiers
         train_data_path = os.path.join(input_dir, "train_data.h5")
-        train_labels_path = os.path.join(input_dir, "train_labels.h5")
+        train_labels_path = os.path.join(input_dir, "train_labels.npy")
         test_data_path = os.path.join(input_dir, "test_data.h5")
 
-        # Chargement Train Data & Labels
+        # Chargement Train
         if os.path.exists(train_data_path) and os.path.exists(train_labels_path):
             with h5py.File(train_data_path, "r") as f:
+                # Utilisation de [:] car la RAM le permet (30k images 224x224x3 uint8 ~= 4.5 Go)
                 self.train_data = f["images"][:]
-            with h5py.File(train_labels_path, "r") as f:
-                self.train_labels = f["labels"][:]
-            print(f"[+] Loaded Train: {self.train_data.shape}")
+            self.train_labels = np.load(train_labels_path)
+            print(f"[+] Loaded Train: {self.train_data.shape} samples")
         else:
-            print("[!] Train files missing, running in test-only mode")
+            print("[!] Train data/labels missing. Ingestion will continue for test only.")
 
-        # Chargement Test Data (Obligatoire)
+        # Chargement Test
         if not os.path.exists(test_data_path):
             raise FileNotFoundError(f"test_data.h5 not found in {input_dir}")
-
+        
         with h5py.File(test_data_path, "r") as f:
             self.test_data = f["images"][:]
-        print(f"[+] Loaded Test: {self.test_data.shape}")
+        print(f"[+] Loaded Test: {self.test_data.shape} samples")
 
     # ------------------------------------------
     # Model handling
     # ------------------------------------------
-
     def init_submission(self, Model):
         print("[*] Initializing submitted model")
         self.model = Model()
 
     def fit_submission(self):
-        """
-        Fit le modèle avec data ET labels.
-        """
-        if self.train_data is None or self.train_labels is None:
-            print("[!] Missing train data or labels, skipping training")
-            return
-
-        print("[*] Fitting submitted model")
-        # On passe X et Y au fit
-        self.model.fit(self.train_data, self.train_labels)
+        if self.train_data is not None and self.train_labels is not None:
+            print("[*] Fitting submitted model...")
+            self.model.fit(self.train_data, self.train_labels)
+        else:
+            print("[!] Skipping fit: no training data provided.")
 
     def predict_submission(self):
-        print("[*] Running prediction")
+        print("[*] Running prediction on test data...")
         self.predictions = self.model.predict(self.test_data)
 
     # ------------------------------------------
     # Result handling
     # ------------------------------------------
-
     def compute_result(self):
-        print("[*] Computing ingestion result")
-        # On transforme les prédictions en liste pour le JSON si c'est du Numpy
-        preds_to_save = self.predictions.tolist() if isinstance(self.predictions, np.ndarray) else self.predictions
-        
-        self.ingestion_result = {
-            "num_test_samples": len(self.test_data) if self.test_data is not None else 0,
-            "predictions": preds_to_save,
-            "status": "success"
-        }
+        # Formatage pour Codabench (souvent un fichier .txt ou .json selon le scorer)
+        preds = self.predictions.tolist() if isinstance(self.predictions, np.ndarray) else self.predictions
+        self.ingestion_result = preds
 
-    def save_result(self, output_dir=None):
+    def save_result(self, output_dir):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        result_file = os.path.join(output_dir, "result.json")
+        # On sauvegarde les prédictions pures (souvent nommé 'labels.predict')
+        result_file = os.path.join(output_dir, "labels.predict")
         with open(result_file, "w") as f:
-            json.dump(self.ingestion_result, f, indent=4)
+            for p in self.ingestion_result:
+                f.write(f"{p}\n")
+        print(f"[✔] Predictions saved to {result_file}")
