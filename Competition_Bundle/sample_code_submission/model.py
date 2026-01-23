@@ -1,68 +1,55 @@
-# ----------------------------------------
-# Imports
-# ----------------------------------------
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
-
-# ----------------------------------------
-# Model Class
-# ----------------------------------------
 class Model:
     """
-    Simple scikit-learn style classification model compatible with HDF5 arrays.
+    Modèle de base utilisant une Random Forest.
+    Adapté pour gérer le fort déséquilibre des classes (97% vs 3%).
     """
 
     def __init__(self):
-        """
-        Initialize the classifier.
-        """
-        print("[*] - Initializing Classifier")
-
-        # Simple baseline classifier
-        self.clf = LogisticRegression(
-            max_iter=100, # Réduit pour tester rapidement
-            solver="lbfgs"
+        print("[*] - Initializing Random Forest Classifier")
+        
+        # On utilise class_weight="balanced" pour donner plus d'importance 
+        # à la classe minoritaire (les visites) automatiquement.
+        self.clf = RandomForestClassifier(
+            n_estimators=50,      # Nombre d'arbres (50 pour rester rapide)
+            max_depth=10,         # On limite la profondeur pour éviter l'overfitting
+            class_weight="balanced", # CRUCIAL pour ton dataset déséquilibré
+            n_jobs=-1,            # Utilise tous les cœurs de ton processeur
+            random_state=42
         )
+
+    def _preprocess(self, X):
+        """
+        Prépare les données pour scikit-learn.
+        Aplatit les images et réduit la charge mémoire si nécessaire.
+        """
+        # X est initialement (n_samples, height, width, 3)
+        # On doit le transformer en (n_samples, height * width * 3)
+        if len(X.shape) > 2:
+            X = X.reshape(X.shape[0], -1)
+        
+        # Optionnel : conversion en float32 pour scikit-learn
+        return X.astype('float32')
 
     def fit(self, X, y):
         """
-        Train the model using training data.
-
-        Parameters
-        ----------
-        X : numpy.ndarray
-            Images ou caractéristiques (ex: [n_samples, height, width, channels])
-        y : numpy.ndarray
-            Labels (ex: [n_samples])
+        Entraîne le modèle.
         """
-        print(f"[*] - Training Classifier on {X.shape[0]} samples")
-
-        # Redimensionnement : Si X est un bloc d'images (ex: 100x64x64), 
-        # on l'aplatit en (100, 4096) pour que la LogisticRegression comprenne.
-        if len(X.shape) > 2:
-            X = X.reshape(X.shape[0], -1)
-
-        self.clf.fit(X, y)
+        print(f"[*] - Training on {X.shape[0]} samples...")
+        
+        X_flat = self._preprocess(X)
+        
+        # Entraînement
+        self.clf.fit(X_flat, y)
+        print("[✔] - Training complete.")
 
     def predict(self, X):
         """
-        Predict labels for test data.
-
-        Parameters
-        ----------
-        X : numpy.ndarray
-            Images ou caractéristiques de test.
-
-        Returns
-        -------
-        y : numpy.ndarray
-            Predicted labels
+        Prédit les labels (0 ou 1).
         """
-        print(f"[*] - Predicting on {X.shape[0]} test samples")
-
-        # Même transformation pour le test set
-        if len(X.shape) > 2:
-            X = X.reshape(X.shape[0], -1)
-
-        return self.clf.predict(X)
+        print(f"[*] - Predicting on {X.shape[0]} samples...")
+        
+        X_flat = self._preprocess(X)
+        return self.clf.predict(X_flat)
