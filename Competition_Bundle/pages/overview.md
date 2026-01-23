@@ -79,4 +79,4 @@ We thank all contributors involved in data collection, annotation, and platform 
 
 ## Contact
 ***
-For questions or issues related to the competition, please contact: ...
+For questions or issues related to the competition, please contact: baptiste.pras@universite-paris-saclay.fr
