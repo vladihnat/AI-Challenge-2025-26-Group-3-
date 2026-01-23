@@ -38,26 +38,26 @@ class Ingestion:
     # ------------------------------------------
     def load_train_and_test_data(self, input_dir):
         """
-        Charge les images depuis H5 et les labels depuis NPY.
+        Charge images from H5 and labels from NPY.
         """
         print(f"[*] Loading data from {input_dir}")
 
-        # Chemins des fichiers
+        # File paths
         train_data_path = os.path.join(input_dir, "train_data.h5")
         train_labels_path = os.path.join(input_dir, "train_labels.npy")
         test_data_path = os.path.join(input_dir, "test_data.h5")
 
-        # Chargement Train
+        # Train loading
         if os.path.exists(train_data_path) and os.path.exists(train_labels_path):
             with h5py.File(train_data_path, "r") as f:
-                # Utilisation de [:] car la RAM le permet (30k images 224x224x3 uint8 ~= 4.5 Go)
+                # We use [:] because the RAM allows it (30k images 224x224x3 uint8 ~ 4.5 Go)
                 self.train_data = f["images"][:]
             self.train_labels = np.load(train_labels_path)
             print(f"[+] Loaded Train: {self.train_data.shape} samples")
         else:
             print("[!] Train data/labels missing. Ingestion will continue for test only.")
 
-        # Chargement Test
+        # Loading Test
         if not os.path.exists(test_data_path):
             raise FileNotFoundError(f"test_data.h5 not found in {input_dir}")
         
@@ -87,14 +87,14 @@ class Ingestion:
     # Result handling
     # ------------------------------------------
     def compute_result(self):
-        # Formatage pour Codabench (souvent un fichier .txt ou .json selon le scorer)
+        # Codabench formatting (either .txt or .json depending the scorer)
         preds = self.predictions.tolist() if isinstance(self.predictions, np.ndarray) else self.predictions
         self.ingestion_result = preds
 
     def save_result(self, output_dir):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        # On sauvegarde les prédictions pures (souvent nommé 'labels.predict')
+        # Save predictions (usually named 'labels.predict')
         result_file = os.path.join(output_dir, "labels.predict")
         with open(result_file, "w") as f:
             for p in self.ingestion_result:
