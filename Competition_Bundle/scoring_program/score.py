@@ -24,7 +24,7 @@ class Scoring:
         return (self.end_time - self.start_time).total_seconds()
 
     def load_reference_data(self, reference_dir):
-        """Charge les labels réels (0 ou 1)."""
+        """Load the real labels (0 or 1)."""
         print(f"[*] Reading reference data from {reference_dir}")
         ref_file = os.path.join(reference_dir, "test_labels.npy")
         try:
@@ -34,7 +34,7 @@ class Scoring:
             print(f"[-] Error loading reference data: {e}")
 
     def load_ingestion_result(self, predictions_dir):
-        """Charge les prédictions du modèle."""
+        """Load the predictions of the model."""
         print(f"[*] Reading ingestion result from {predictions_dir}")
         result_file = os.path.join(predictions_dir, "labels.predict")
         try:
@@ -46,22 +46,32 @@ class Scoring:
             print(f"[-] Error loading ingestion result: {e}")
 
     def compute_scores(self):
-        """Calcule les métriques clés pour données déséquilibrées."""
+        """Calculate the key metrics for imbalanced data."""
         print("[*] Computing scores")
 
         if self.reference_data is None or self.ingestion_result is None:
             print("[-] Missing data to compute scores.")
             return
 
-        # Alignement des dimensions au cas où
+        # Dimension alignment in the case it is needed
         min_len = min(len(self.reference_data), len(self.ingestion_result))
         y_true = self.reference_data[:min_len]
         y_pred = self.ingestion_result[:min_len]
 
-        # 1. Balanced Accuracy : moyenne de l'accuracy de chaque classe (Base 0.5)
+
+        # 1. Balanced Accuracy : average of the accuracy of each class (Base 0.5)
+        
+        # We use it because it prevents the model from appearing succesful by 
+        # simply predicting the majority class
+        
         bac = balanced_accuracy_score(y_true, y_pred)
         
-        # 2. F1-Score : moyenne harmonique Précision/Rappel (Idéal pour les classes rares)
+        # 2. F1-Score : harmonic mean of Precision/Recall (Ideal for rare classes)
+        
+        # We use it because it provides a single measure of reliability by balancing 
+        # the trade-off between avoiding false alarms (Precision) and ensuring 
+        # no actual visitors are missed (Recall).
+
         f1 = f1_score(y_true, y_pred)
 
         self.scores_dict = {
