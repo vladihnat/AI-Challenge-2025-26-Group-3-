@@ -44,10 +44,10 @@ if __name__ == "__main__":
         submission_dir = os.path.join(root_dir_name, "sample_code_submission")
     else:
         # DO NOT CHANGE THESE PATHS. THESE ARE USED ON THE CODABENCH PLATFORM
-        input_dir = "/app/data"
-        output_dir = "/app/output"
-        program_dir = "/app/program"
-        submission_dir = "/app/ingested_program"
+        input_dir = "../input_data/"
+        output_dir = "../sample_result_submission/"
+        program_dir = "../ingestion_program/"
+        submission_dir = "../sample_code_submission/"
 
     sys.path.append(input_dir)
     sys.path.append(output_dir)
