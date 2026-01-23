@@ -3,51 +3,55 @@ from sklearn.ensemble import RandomForestClassifier
 
 class Model:
     """
-    Modèle de base utilisant une Random Forest.
-    Adapté pour gérer le fort déséquilibre des classes (97% vs 3%).
+    Base model using Random Forest.
+    Adapted to handle strong class imbalance (97% vs 3%).
     """
 
     def __init__(self):
         print("[*] - Initializing Random Forest Classifier")
         
-        # On utilise class_weight="balanced" pour donner plus d'importance 
-        # à la classe minoritaire (les visites) automatiquement.
+        # We chose Random Forest for its robustness and ability to handle 
+        # high-dimensional raw pixel data without requiring complex preprocessing
+        
+        # Use class_weight="balanced" to give more importance to the
+        # minority class (the visits) automatically (crucial given the imbalance here)*
+
         self.clf = RandomForestClassifier(
-            n_estimators=50,      # Nombre d'arbres (50 pour rester rapide)
-            max_depth=10,         # On limite la profondeur pour éviter l'overfitting
-            class_weight="balanced", # CRUCIAL pour ton dataset déséquilibré
-            n_jobs=-1,            # Utilise tous les cœurs de ton processeur
+            n_estimators=50,      # Number of trees (50 for efficiency)
+            max_depth=10,         # Limit depth to avoid overfitting
+            class_weight="balanced", # CRUCIAL for a highly imbalanced dataset
+            n_jobs=-1,            # Uses all cores of your processor
             random_state=42
         )
 
     def _preprocess(self, X):
         """
-        Prépare les données pour scikit-learn.
-        Aplatit les images et réduit la charge mémoire si nécessaire.
+        Prepare data for scikit-learn.
+        Flatten images and reduce memory load if needed.
         """
-        # X est initialement (n_samples, height, width, 3)
-        # On doit le transformer en (n_samples, height * width * 3)
+        # X is initially (n_samples, height, width, 3)
+        # We have to transform it to (n_samples, height * width * 3)
         if len(X.shape) > 2:
             X = X.reshape(X.shape[0], -1)
         
-        # Optionnel : conversion en float32 pour scikit-learn
+        # Optional : conversion to float32 for scikit-learn
         return X.astype('float32')
 
     def fit(self, X, y):
         """
-        Entraîne le modèle.
+        Train the model.
         """
         print(f"[*] - Training on {X.shape[0]} samples...")
         
         X_flat = self._preprocess(X)
         
-        # Entraînement
+        # Training
         self.clf.fit(X_flat, y)
         print("[✔] - Training complete.")
 
     def predict(self, X):
         """
-        Prédit les labels (0 ou 1).
+        Predict labels (0 or 1).
         """
         print(f"[*] - Predicting on {X.shape[0]} samples...")
         
