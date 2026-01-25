@@ -1,10 +1,10 @@
-# M1 AI Challenge Class 2025-26 - Sample Challenge
-# Created by: Ihsan Ullah
+# M1 AI Challenge Class 2025-26 - Pollinators Challenge - Group 3
+# Sample created by: Ihsan Ullah
 # Created on: Jan 13, 2026
 
 version: 2
-title: M1 AI Challenge 2025-26
-description: M1 AI Challenge class sample challenge
+title: M1 AI Challenge 2025-26 - Pollinators Challenge - Group 3
+description: M1 AI Challenge 2025-26 - Pollinators Challenge - Group 3 Competition
 image: logo.png
 registration_auto_approve: False   
 docker_image: codalab/codalab-legacy:py39
@@ -21,7 +21,7 @@ pages:
 phases:
   - index: 0
     name: Phase 1
-    description: Feedback Phase
+    description: Initial Phase
     start: 2026-01-01 # YYYY-MM-DD
     end: 2026-02-01 # YYYY-MM-DD
     tasks:
@@ -31,8 +31,8 @@ phases:
 # input_data, reference_data, ingestion_program are optional
 tasks:
   - index: 0
-    name: Sample Task
-    description: Sample Task Description
+    name: Pollinators Challenge Task
+    description: Classify images to identify pollinators
     input_data: input_data/
     reference_data: reference_data/  
     scoring_program: scoring_program/
@@ -43,22 +43,16 @@ leaderboards:
   - index: 0 
     title: Results
     key: main_leaderboard
-    submission_rule: "Force_Latest_Multiple"
+    submission_rule: "Force_Best"
     columns:
       - index: 0
-        title: Balanced Accuracy  # Nom affiché sur la colonne
-        key: balanced_accuracy   # Doit être identique à la clef dans scores.json
-        sort: desc               # Plus le score est haut, mieux c'est
-        precision: 3             # Nombre de décimales à afficher
+        title: Balanced Accuracy 
+        key: balanced_accuracy
+        sort: desc            
+        precision: 3            
 
       - index: 1
         title: F1 Score
         key: f1_score
-        sort: desc
-        precision: 3
-
-      - index: 2
-        title: Average Precision
-        key: average_precision
         sort: desc
         precision: 3
