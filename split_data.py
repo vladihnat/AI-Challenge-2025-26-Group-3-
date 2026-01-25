@@ -36,10 +36,6 @@ TEST SET:
 ---------------------------------------------------------------------------
 Result: Near-perfect stratification preserved while keeping sequences intact.
 """
-
-import os
-# ... reste du code ...
-
 import os
 import h5py
 import numpy as np
@@ -49,7 +45,6 @@ import random
 import time
 from tqdm import tqdm
 
-# --- CONFIGURATION ---
 H5_DIR = "Pollinator-Data-Sample_5pct_fraisiers_hdf5_observed_series0"
 CSV_PATH = "sampled_imgs_10classesmetadata/sampled_imgs_10classes_metadata.csv"
 JPG_ROOT = "sampled_imgs_10classesmetadata" 
@@ -69,64 +64,62 @@ def create_empty_data_h5(filename):
                      dtype='uint8', compression="gzip", compression_opts=4)
     return f
 
-# --- 1. COLLECTING SEQUENCES ---
 sequences = {} 
 global_0, global_1 = 0, 0
 
-print("[*] Scanning sources for analysis...")
-
-# CSV Scan (JPG images)
+# Load and process CSV and JPG data
 print("[*] Scanning CSV...")
 df_jpg = pd.read_csv(CSV_PATH)
 for _, row in df_jpg.iterrows():
     l_bin = process_label(row['label'])
     if l_bin != -1:
-        # Using videoName to identify the sequence
-        seq_id = str(row['videoName']) if 'videoName' in row else os.path.dirname(row['jpg_path'])
-        if seq_id not in sequences: sequences[seq_id] = []
-        sequences[seq_id].append({'src': 'jpg', 'path': row['jpg_path'], 'label': l_bin})
+        v_name = str(row['videoName']) if 'videoName' in row else os.path.dirname(row['jpg_path'])
+        if v_name not in sequences: sequences[v_name] = []
+        sequences[v_name].append({
+            'src': 'jpg', 
+            'path': row['jpg_path'], 
+            'label': l_bin,
+            'video_name': v_name
+        })
         if l_bin == 0: global_0 += 1
         else: global_1 += 1
 
-# H5 Scan (H5 images)
+# Load and process H5 data
 print(f"[*] Scanning H5 folder...")
 h5_files = [f for f in os.listdir(H5_DIR) if f.endswith('.h5')]
 for h5_name in h5_files:
     with h5py.File(os.path.join(H5_DIR, h5_name), 'r') as f:
         lbls = f['labels'][:]
         for idx, l in enumerate(lbls):
-            # Each H5 file is a unique sequence
             l_bin = process_label(l)
             if l_bin != -1:
                 if h5_name not in sequences: sequences[h5_name] = []
-                sequences[h5_name].append({'src': 'h5', 'file': h5_name, 'idx': idx, 'label': l_bin})
+                sequences[h5_name].append({
+                    'src': 'h5', 
+                    'file': h5_name, 
+                    'idx': idx, 
+                    'label': l_bin,
+                    'video_name': h5_name
+                })
                 if l_bin == 0: global_0 += 1
                 else: global_1 += 1
 
-# Grouping images by sequence prevent images from the same sequence being in both Train AND Test to avoid data leakage
+# Optimize Train/Test split
+print(f"[*] Total Images: {global_0 + global_1}, Insect Images: {global_1}")
 seq_ids = list(sequences.keys())
 seq_data = [{'id': sid, 
              'n0': sum(1 for r in sequences[sid] if r['label'] == 0), 
              'n1': sum(1 for r in sequences[sid] if r['label'] == 1),
              'total': len(sequences[sid])} for sid in seq_ids]
 
-# --- 2. SEARCHING FOR THE BEST SPLIT ---
-# We want to split sequences into Train and Test sets (75% / 25%) while:
-# 1. Ensuring that class 1 (insects) is represented as close as possible to 25% in the Test set
-# 2. Ensuring that the total number of images in the Test set is close to 25% of the total stock
-# 3. Ensuring that the ratio of class 1 in the Test set is similar to the global ratio
-target_ratio = 0.25  # 25% of data in Test set
-search_duration = 60  # seconds
+target_ratio = 0.25
+search_duration = 60
 best_penalty = float('inf')
 best_test_ids = []
 
-print(f"[*] Searching for the best split ({search_duration}s)...")
+print(f"[*] Optimizing split ({search_duration}s)...")
 start_time = time.time()
-iters = 0
-
 while (time.time() - start_time) < search_duration:
-    iters += 1
-    # Testing test set sizes ranging from 20% to 30% of sequences
     k = random.randint(max(1, int(len(seq_ids)*0.20)), int(len(seq_ids)*0.30))
     current_test_ids = random.sample(seq_ids, k)
     
@@ -134,75 +127,72 @@ while (time.time() - start_time) < search_duration:
     t1 = sum(s['n1'] for s in seq_data if s['id'] in current_test_ids)
     tt = t0 + t1
     
-    r0 = t0 / global_0 if global_0 > 0 else 0
     r1 = t1 / global_1 if global_1 > 0 else 0
     rt = tt / (global_0 + global_1)
     
-    # PENALTY CALCULATION
-    # 1. Deviation of class 1 from 25% of the stock (Absolute priority)
-    p1 = abs(r1 - target_ratio) * 20
-    # 2. Deviation of total volume from 25% (Important for file size balancing)
-    pt = abs(rt - target_ratio) * 5
-    # 3. Distribution leakage (The ratio of class 1 in the Test set should be the same as globally)
-    # This ensures that Train and Test have the same % of class 1
-    pl = abs(r1 - rt) * 10
+    penalty = abs(r1 - target_ratio) * 20 + abs(rt - target_ratio) * 5 + abs(r1 - rt) * 10
     
-    total_penalty = p1 + pt + pl
-    
-    if total_penalty < best_penalty:
-        best_penalty = total_penalty
-        best_test_ids = current_test_ids
-
-print(f"[✔] Optimization completed ({iters} combinations tested).")
+    if penalty < best_penalty:
+        best_penalty, best_test_ids = penalty, current_test_ids
 
 train_refs, test_refs = [], []
 for sid in seq_ids:
     if sid in best_test_ids: test_refs.extend(sequences[sid])
     else: train_refs.extend(sequences[sid])
 
-# --- 3. FILE GENERATION ---
-def build_dataset(refs, data_h5_name, label_npy_name):
-    print(f"\n>>> Creating {data_h5_name} ({len(refs)} images)...")
-    h5_f = create_empty_data_h5(data_h5_name)
-    final_labels = []
+# Build H5 datasets
+def build_dataset(refs, h5_name, lbl_name, meta_name):
+    print(f"\n>>> Creating {h5_name}...")
+    h5_f = create_empty_data_h5(h5_name)
+    final_labels, final_meta = [], []
     batch_size = 200
-    for i in tqdm(range(0, len(refs), batch_size), desc="Writing Batches"):
+    
+    for i in tqdm(range(0, len(refs), batch_size), desc="Writing batches"):
         batch = refs[i:i+batch_size]
-        imgs, lbls = [], []
+        imgs, lbls, meta = [], [], []
         opened_h5 = {}
+        
         for r in batch:
             try:
                 if r['src'] == 'h5':
-                    if r['file'] not in opened_h5: opened_h5[r['file']] = h5py.File(os.path.join(H5_DIR, r['file']), 'r')
+                    if r['file'] not in opened_h5: 
+                        opened_h5[r['file']] = h5py.File(os.path.join(H5_DIR, r['file']), 'r')
                     img = opened_h5[r['file']]['images'][r['idx']]
                 else:
                     img = cv2.imread(os.path.join(JPG_ROOT, r['path']))
                     if img is None: continue
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                
                 if img.shape[:2] != IMG_SIZE: img = cv2.resize(img, IMG_SIZE)
-                imgs.append(img); lbls.append(r['label'])
+                imgs.append(img)
+                lbls.append(r['label'])
+                meta.append(str(r['video_name']))
             except: continue
+            
         for f in opened_h5.values(): f.close()
+        
         if imgs:
             curr = h5_f["images"].shape[0]
             h5_f["images"].resize(curr + len(imgs), axis=0)
             h5_f["images"][curr:curr+len(imgs)] = np.array(imgs)
             final_labels.extend(lbls)
+            final_meta.extend(meta)
+            
     h5_f.close()
-    np.save(label_npy_name, np.array(final_labels))
+    np.save(lbl_name, np.array(final_labels))
+    np.save(meta_name, np.array(final_meta))
     return np.array(final_labels)
 
-y_tr = build_dataset(train_refs, "train_data.h5", "train_labels.npy")
-y_te = build_dataset(test_refs, "test_data.h5", "test_labels.npy")
+y_tr = build_dataset(train_refs, "train_data.h5", "train_labels.npy", "train_metadata.npy")
+y_te = build_dataset(test_refs, "test_data.h5", "test_labels.npy", "test_metadata.npy")
 
-# --- 4. SANITY CHECK ---
+# Sanity check
 def print_stats(name, y, g_total, g_pos):
-    c0, c1 = np.sum(y == 0), np.sum(y == 1)
-    print(f"\nStats {name}:")
-    print(f"  Images: {len(y)} ({100*len(y)/g_total:.1f}% of total stock)")
-    print(f"  Insects: {c1} ({100*c1/g_pos:.1f}% of insect stock)")
-    print(f"  Internal ratio of class 0: {100*c0/len(y):.3f}% of class 0 in this set")
-    print(f"  Internal ratio of class 1: {100*c1/len(y):.3f}% of class 1 in this set")
+    c1 = np.sum(y == 1)
+    print(f"\n{name} Stats:")
+    print(f"  Images: {len(y)} ({100*len(y)/g_total:.1f}%)")
+    print(f"  Insects: {c1} ({100*c1/g_pos:.1f}%)")
+    print(f"  Ratio: {100*c1/len(y):.3f}%")
 
 g_t = global_0 + global_1
 print_stats("TRAIN", y_tr, g_t, global_1)
