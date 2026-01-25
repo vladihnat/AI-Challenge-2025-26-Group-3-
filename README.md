@@ -16,12 +16,15 @@ AI-Challenge-2025-26-Group-3-/
 ├── README.md                    # This file - project overview and structure
 ├── split_data.py                # Utility script for cleaning and splitting original dataset into train/test sets
 │
-├── Starting_Kit/                # Participant starting resources
+├── Starting_Kit/               # Participant starting resources
 │   ├── README.md               # Guide for getting started with the challenge
 │   └── README.ipynb            # Interactive Jupyter notebook with data exploration and baseline models
+│   └── scale_pos_weight_optimization.png
+│   └── data/
+|       ├── README.md          # Instruction for data
 │
-└── Competition_Bundle/          # Complete Codabench competition package
-    ├── competition.yaml        # Competition configuration for Codabench
+└── Competition_Bundle/        # Complete Codabench competition package
+    ├── competition.yaml       # Competition configuration for Codabench
     ├── logo.png               # Competition logo
     │
     ├── ingestion_program/     # Loads data and runs participant models
