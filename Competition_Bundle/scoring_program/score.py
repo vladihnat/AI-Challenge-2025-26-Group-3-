@@ -71,6 +71,9 @@ class Scoring:
         # We use it because it provides a single measure of reliability by balancing 
         # the trade-off between avoiding false alarms (Precision) and ensuring 
         # no actual visitors are missed (Recall).
+        # F1-Score will be our main metric to optimize during model training
+        # and for the competition, as it directly reflects the model's effectiveness
+        # in identifying the minority class without being misled by the majority class.
 
         f1 = f1_score(y_true, y_pred)
 
