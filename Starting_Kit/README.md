@@ -12,7 +12,7 @@ The notebook is designed to be self-contained and easy to run, even for users di
 ## Automatic Data Download
 
 When executing the notebook, the required dataset is automatically downloaded if it is not already present on your system.
-No manual setup is needed: as long as you run the cells in order, the notebook will check for the data locally and retrieve it if necessary.
+No manual setup is needed: as long as you run the cells in order, the notebook will check for the data locally and retrieve it if necessary. For quick experimentation, the script allows you to charge only a fraction of the dataset on the RAM to execute the rest of the cells.
 
 ---
 
@@ -27,6 +27,8 @@ The data is stored in `.h5` files. Each file corresponds to a sequence of images
 Several sections of the notebook are devoted to understanding the dataset. Visualizations are used to examine class distribution and highlight the strong imbalance between sequences with and without pollinators.
 
 The notebook also includes tools to visualize individual frames and sequences, helping users develop an intuition for what pollinator presence looks like in the data.
+
+Finally, it gives some hints about feature extracting using PCA.
 
 ---
 
