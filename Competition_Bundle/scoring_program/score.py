@@ -53,11 +53,15 @@ class Scoring:
             print("[-] Missing data to compute scores.")
             return
 
-        # Dimension alignment in the case it is needed
-        min_len = min(len(self.reference_data), len(self.ingestion_result))
-        y_true = self.reference_data[:min_len]
-        y_pred = self.ingestion_result[:min_len]
-
+        if len(self.reference_data) != len(self.ingestion_result):
+            error_msg = (f"[-] Dimension mismatch: Reference has {len(self.reference_data)} labels, "
+                         f"but prediction file has {len(self.ingestion_result)} lines.")
+            print(error_msg)
+            # On soulève une erreur pour que Codabench marque la soumission comme "Failed"
+            raise ValueError(error_msg)
+        
+        y_true = self.reference_data
+        y_pred = self.ingestion_result
 
         # 1. Balanced Accuracy : average of the accuracy of each class (Base 0.5)
         
