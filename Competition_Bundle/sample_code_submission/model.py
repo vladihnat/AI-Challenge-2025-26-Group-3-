@@ -21,6 +21,8 @@ This model serves as our baseline for insect detection. Our choices are justifie
      class imbalance and training stability.
 """
 
+import os
+import multiprocessing
 import numpy as np
 from tqdm import tqdm
 from joblib import Parallel, delayed
@@ -37,13 +39,20 @@ class Model:
 
     def __init__(self, grayscale=False, multiscale=True):
         print("[*] - Initializing HOG + XGBoost Classifier (Baseline)")
+         # Parameters for parallelization
+        try:
+            self.n_cpus = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else multiprocessing.cpu_count()
+        except:
+            self.n_cpus = 1
+        print(f"[*] Detected {self.n_cpus} CPU cores for parallel processing.")
+
         # HOG settings
         self.grayscale = grayscale
         self.multiscale = multiscale
         
         # HOG optimal parameters
-        self.best_h_orient = 12
-        self.best_h_pix = (16, 16)
+        self.best_h_orient = 9
+        self.best_h_pix = (8, 8)
         self.best_h_block = (1, 1)
         
         # Multi-scale HOG optimal parameters (S1 global, S2 local)
@@ -52,20 +61,20 @@ class Model:
 
         # Classifier initialization with tuned hyperparameters
         self.clf = XGBClassifier(
-            n_estimators=250,      
-            max_depth=5,            
-            learning_rate=0.03,    
+            n_estimators=1500,      
+            max_depth=7,            
+            learning_rate=0.005,    
             subsample=0.8,         
             colsample_bytree=0.8,  
-            scale_pos_weight=10,
-            min_child_weight=5,
+            scale_pos_weight=3,
+            max_delta_step=0,
+            min_child_weight=15,
             gamma=0.5,  
-            reg_alpha=0.1,
+            reg_alpha=0,
             reg_lambda=1.0,
             tree_method='hist',
             random_state=42,
-            n_jobs=-1,
-            max_delta_step=1,
+            n_jobs=self.n_cpus,
             enable_categorical=False
         )
 
@@ -96,11 +105,11 @@ class Model:
         print(f"[*] - Preprocessing: Extracting HOG features (Multiscale={self.multiscale})...")
         
         if self.multiscale:
-            features = Parallel(n_jobs=-1)(
+            features = Parallel(n_jobs=self.n_cpus)(
                 delayed(self._process_multi)(img) for img in tqdm(X, desc="HOG extraction", leave=False)
             )
         else:
-            features = Parallel(n_jobs=-1)(
+            features = Parallel(n_jobs=self.n_cpus)(
                 delayed(self._process_single)(img) for img in tqdm(X, desc="HOG extraction", leave=False)
             )
             
