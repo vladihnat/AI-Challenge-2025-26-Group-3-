@@ -57,7 +57,6 @@ class Scoring:
             error_msg = (f"[-] Dimension mismatch: Reference has {len(self.reference_data)} labels, "
                          f"but prediction file has {len(self.ingestion_result)} lines.")
             print(error_msg)
-            # On soulève une erreur pour que Codabench marque la soumission comme "Failed"
             raise ValueError(error_msg)
         
         y_true = self.reference_data
