@@ -58,6 +58,9 @@ AI-Challenge-2025-26-Group-3-/
     ├── pages/                 # Competition description pages (HTML/Markdown)
     │   └── overview.md        # Overview page
     │   └── terms.md           # Terms page
+    │   └── starting_kit.md    # Starting Kit page
+    │   └── data.md            # data.md
+    │   └── evaluation.md      # evaluation.md
     │
     └── utilities/             # Helper scripts and tools
         └── compile_bundle.py  # Script to compile the competition bundle
