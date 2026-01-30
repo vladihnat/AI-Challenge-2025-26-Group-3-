@@ -38,9 +38,12 @@ class Scoring:
         print(f"[*] Reading ingestion result from {predictions_dir}")
         result_file = os.path.join(predictions_dir, "labels.predict")
         try:
-            with open(result_file, "r") as f:
-                preds = [float(line.strip()) for line in f if line.strip()]
-            self.ingestion_result = np.array(preds)
+            if result_file.endswith('.npy'):
+                self.ingestion_result = np.load(result_file)
+            else:
+                with open(result_file, "r") as f:
+                    preds = [float(line.strip()) for line in f if line.strip()]
+                self.ingestion_result = np.array(preds)
             print(f"[+] Loaded {len(self.ingestion_result)} predictions.")
         except Exception as e:
             print(f"[-] Error loading ingestion result: {e}")
@@ -66,7 +69,6 @@ class Scoring:
         
         # We use it because it prevents the model from appearing succesful by 
         # simply predicting the majority class
-        
         bac = balanced_accuracy_score(y_true, y_pred)
         
         # 2. F1-Score : harmonic mean of Precision/Recall (Ideal for rare classes)
@@ -77,12 +79,12 @@ class Scoring:
         # F1-Score will be our main metric to optimize during model training
         # and for the competition, as it directly reflects the model's effectiveness
         # in identifying the minority class without being misled by the majority class.
-
         f1 = f1_score(y_true, y_pred)
 
         self.scores_dict = {
             "balanced_accuracy": float(bac),
             "f1_score": float(f1),
+            "duration": self.get_duration()
         }
         
         print(f"--- RESULTS ---")
