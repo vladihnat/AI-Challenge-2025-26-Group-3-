@@ -88,6 +88,7 @@ This challenge is organized by **Université Paris-Saclay**.
 The dataset was collected and curated by the **INRAE team**.
 We thank all contributors involved in data collection, annotation, and platform support.
 
+We also acknowledge the contributions of:
 **Team Members**:
 
 - Zeying Li
