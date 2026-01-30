@@ -4,9 +4,6 @@ This challenge focuses on lightweight and efficient pollinator detection from im
 
 The objective is not only to achieve good detection performance, but also to explore efficient and deployable solutions suitable for running 24/7 on limited hardware.
 
-***
-
-
 ## Introduction
 ***
 Pollinators play a crucial role in ecosystems and agriculture, yet monitoring their activity at scale remains challenging. Camera-based monitoring systems generate large volumes of image data that must often be processed continuously, making computational efficiency a key concern.
