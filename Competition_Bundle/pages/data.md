@@ -7,19 +7,19 @@ The provided data is packaged as HDF5 + NumPy files and is distributed through t
 You may train your model on the provided training set and/or any external data of your choice. During evaluation, your submitted code must produce predictions for the hidden test set.
 
 
-## 📂🗃️ Data files
+## Data files
 
 All files are downloaded into the `data/` folder by the Starting Kit.
 
-### 📝 `data/train_data.h5`
+### `data/train_data.h5`
 - HDF5 file containing the training images under the dataset key `images`.
 
-### 📝 `data/train_labels.npy`
+### `data/train_labels.npy`
 - NumPy array of binary labels aligned with `train_data.h5`:
   - `0` = no pollinator
   - `1` = pollinator present
 
-### 📝 `data/train_metadata.npy`
+### `data/train_metadata.npy`
 - NumPy array of sequence IDs aligned with the training samples.
 - Use it to split train/validation by sequence (to avoid leakage across highly similar frames).
 
