@@ -70,7 +70,7 @@ This two-phase evaluation protocol ensures fair comparison between participants 
 
 ## Submissions
 ***
-Submissions consist of a trained model compatible with the Codabench execution environment.
+Submissions consist of a model compatible with the Codabench execution environment.
 
 For each submission, Codabench automatically evaluates the model on a private test set of unseen .h5 files. 
 
@@ -89,6 +89,7 @@ The dataset was collected and curated by the **INRAE team**.
 We thank all contributors involved in data collection, annotation, and platform support.
 
 We also acknowledge the contributions of:
+
 **Team Members**:
 
 - Zeying Li
