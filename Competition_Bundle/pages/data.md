@@ -25,7 +25,7 @@ All files are downloaded into the `data/` folder by the Starting Kit.
 
 
 
-## ⬇️ How to download / access the data
+## How to download / access the data
 
 - **From the Starting Kit:** open the notebook in the **Starting Kit** tab and run the data-loading section.  
   The code will create `./data/` and download the 4 files above automatically.
