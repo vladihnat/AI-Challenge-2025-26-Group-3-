@@ -14,8 +14,12 @@ terms: pages/terms.md
 pages:  
   - title: Overview
     file: pages/overview.md
-  # - title: Data
-  #   file: pages/data.md
+  - title: Data
+    file: pages/data.md
+  - title: Evaluation
+    file: pages/evaluation.md
+  - title: Starting Kit
+    file: pages/starting_kit.md
   
 # You can have multiple phases
 phases:
@@ -23,9 +27,16 @@ phases:
     name: Phase 1
     description: Initial Phase
     start: 2026-01-01 # YYYY-MM-DD
-    end: 2026-02-01 # YYYY-MM-DD
+    end: 2026-02-20 # YYYY-MM-DD
     tasks:
       - 0
+  - index: 0
+    name: Phase 1
+    description: Evaluation Phase
+    start: 2026-02-20 # YYYY-MM-DD
+    end: 2026-02-27 # YYYY-MM-DD
+    tasks:
+      - 1
 
 # scoring_program is required
 # input_data, reference_data, ingestion_program are optional
