@@ -61,11 +61,11 @@ This two-phase evaluation protocol ensures fair comparison between participants 
 ***
 
 - Login or Create Account on [<ins>Codabench</ins>](https://www.codabench.org/) 
-- Go to the `Starting Kit` tab
-- Download the `Dummy Sample Submission`
-- Go to the `My Submissions` tab
 - Register in the Competition
-- Submit the downloaded file
+- Go to the `Starting Kit` tab
+- Download the `Starting Kit`
+- Make your model
+- Submit your file
 
 
 ## Submissions
