@@ -13,8 +13,8 @@ We also report Balanced Accuracy as an additional metric. Balanced Accuracy is t
 The test data is private and split into two evaluation phases:
 
 **Phase 1 — Public (leaderboard)**  
-Participants see their scores after each submission based on a test set of 4,000 images. The scores reflects the performance on a public leaderboard.  Throughout the competition, each participant can make up to 10 submissions total. 
+Participants see their scores after each submission based on a test set of 4,000 images. The scores reflects the performance on a public leaderboard.  Throughout the competition, each participant can make up to 100 submissions total. Each submission must not exceed 3600 seconds. 
 
 
 **Phase 2 — Private (final)**  
-Final scores are computed on a hidden portion of the test set (6,000 images) and are revealed only at the end of the competition to prevent leaderboard overfitting/cheating.
+Final scores are computed on a hidden portion of the test set (6,000 images) and are revealed only at the end of the competition to prevent leaderboard overfitting/cheating. During this phase, each participant can make up to 10 submissions total. Each submission must not exceed 3600 seconds.
