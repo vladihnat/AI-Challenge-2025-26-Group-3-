@@ -146,7 +146,8 @@ class Model:
         print(f"[*] - Preprocessing: Extracting HOG features (Multiscale={self.multiscale})...")
         
         if self.multiscale:
-            features = Parallel(n_jobs=self.n_cpus)(
+            # Keep 'backend="threading"' or joblib will crash the program
+            features = Parallel(n_jobs=self.n_cpus, backend="threading")(
                 delayed(self._process_multi)(img) for img in tqdm(X, desc="HOG extraction", leave=False)
             )
         else:
