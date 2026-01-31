@@ -1,4 +1,13 @@
 """
+The model.py file should define a class named 'Model' with the following interface::
+- __init__(self)
+- fit(self, X, y)
+- predict(self, X)
+
+When you submit your code to codabench, this 'Model' class will be instantiated, trained, and evaluated.
+You can have all other helper functions and classes in this file as needed, 
+but only these three methods will be called by the evaluation framework.
+
 BASELINE MODEL: HOG + XGBOOST PIPELINE
 --------------------------------------
 This model serves as our baseline for insect detection. Our choices are justified as follows:
