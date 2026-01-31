@@ -151,7 +151,7 @@ class Model:
                 delayed(self._process_multi)(img) for img in tqdm(X, desc="HOG extraction", leave=False)
             )
         else:
-            features = Parallel(n_jobs=self.n_cpus)(
+            features = Parallel(n_jobs=self.n_cpus, backend="threading")(
                 delayed(self._process_single)(img) for img in tqdm(X, desc="HOG extraction", leave=False)
             )
             
