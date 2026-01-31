@@ -46,5 +46,5 @@ At the end of the notebook, a final cell shows how to generate a properly format
 
 You should zip a folder containing your model.py with a class Model inside. You class should have a \_\_init\_\_ method, a fit one and a predict one. Also add a requirements.txt with all libraries needed to run your code. Everything is well explained in the starting kit, and the starting kit already contains a sample submission to help you understand the requirements.
 
-Download starting kit here (or in the Files section of this challenge): https://www.codabench.org/datasets/download/fb91b39e-5475-452c-ab90-286084e927d2/
+Download starting kit here (or in the Files section of this challenge): https://www.codabench.org/datasets/download/2a54ab1f-0d83-4375-a0b4-93036ec2d904/
 
