@@ -31,9 +31,9 @@ phases:
     tasks:
       - 0
   - index: 0
-    name: Phase 1
+    name: Phase 2
     description: Evaluation Phase
-    start: 2026-02-20 # YYYY-MM-DD
+    start: 2026-02-21 # YYYY-MM-DD
     end: 2026-02-27 # YYYY-MM-DD
     tasks:
       - 1
