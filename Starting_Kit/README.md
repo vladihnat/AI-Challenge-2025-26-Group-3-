@@ -44,9 +44,6 @@ These examples are not meant to be optimal solutions, but rather a foundation on
 
 At the end of the notebook, a final cell shows how to generate a properly formatted submission for Codabench.
 
-This step uses your trained model to generate predictions on the test sequences and ensures there is exactly one prediction for each sequence. These predictions are then saved in a properly formatted .csv file, which is finally compressed into a .zip archive that is ready to be uploaded to Codabench.
+You should zip a folder containing your model.py with a class Model inside. You class should have a \_\_init\_\_ method, a fit one and a predict one. Also add a requirements.txt with all libraries needed to run your code. Everything is well explained in the starting kit, and the starting kit already contains a sample submission to help you understand the requirements.
 
-You should reuse this code with your own model to ensure the file structure matches the platform requirements, the number of predictions is correct and your submission can be evaluated automatically.
-
-Even a strong model cannot be scored if the submission format is wrong. After any model change, regenerate the .zip file using the notebook’s final cell before submitting.
-
+Download starting kit here (or in the Files section of this challenge): https://www.codabench.org/datasets/download/fb91b39e-5475-452c-ab90-286084e927d2/
