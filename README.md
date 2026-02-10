@@ -13,15 +13,23 @@ This repository contains a complete machine learning challenge focused on **Poll
 ```
 AI-Challenge-2025-26-Group-3-/
 │
-├── README.md                    # This file - project overview and structure
-├── split_data.py                # Utility script for cleaning and splitting original dataset into train/test sets
+├── README.md                   # This file - project overview and structure
+├── split_data.py               # Utility script for cleaning and splitting original dataset into train/test sets
 │
-├── Starting_Kit/               # Participant starting resources
-│   ├── README.md               # Guide for getting started with the challenge
-│   └── README.ipynb            # Interactive Jupyter notebook with data exploration and baseline models
+├── resolution/                # Resolution of another challenge
+│   ├── model.py               # Model used for submission
+│
+├── Starting_Kit/              # Participant starting resources
+│   ├── README.md              # Guide for getting started with the challenge
+│   └── README.ipynb           # Interactive Jupyter notebook with data exploration and baseline models
 │   └── scale_pos_weight_optimization.png
 │   └── data/
 |       ├── README.md          # Instruction for data
+│   └── sample_submission/
+|       ├── model.py           # Sample model implementation
+|       ├── requirements.txt   # File for required libraries
+│   └── submission/
+|       ├── Submission_Code_26-01-31-17-21.zip  # Sample submission
 │
 └── Competition_Bundle/        # Complete Codabench competition package
     ├── competition.yaml       # Competition configuration for Codabench
@@ -41,13 +49,9 @@ AI-Challenge-2025-26-Group-3-/
     │
     ├── input_data/            # Training and test data
     │   └── README.md          # Instructions for input_data
-    │   └── train_data.h5      # .h5 file containing train image sequences
-    │   └── test_data.h5       # .h5 file containing test image sequences
-    │   └── train_labels.npy   # .npy file containing train labels
     │
     ├── reference_data/        # Ground truth labels for evaluation
     │   └── README.md          # Instructions for reference_data
-    │   └── test_labels.npy    # .npy file containing test labels
     │
     ├── sample_code_submission/ # Example participant submission
     │   └── model.py            # Sample model implementation
