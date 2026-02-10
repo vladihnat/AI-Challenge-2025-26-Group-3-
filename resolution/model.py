@@ -47,24 +47,24 @@ from sklearn.decomposition import PCA
 # ----------------------------------------
 class Model:
 
-    def __init__(self, max_iter=390, max_leaf_nodes=63, learning_rate=0.1, max_depth=9, min_samples_leaf=40, l2_regularization=0.005, class_weight=None, early_stopping=False):
+    def __init__(self, max_iter=450, max_leaf_nodes=127, learning_rate=0.05, max_depth=20, min_samples_leaf=80, l2_regularization=3.5e-05, class_weight=None, early_stopping=False):
         """
         This is a constructor for initializing classifier
 
         Parameters
         ----------
         max_iter: int, optional
-            The maximum number of iterations for the classifier (default is 390).
+            The maximum number of iterations for the classifier (default is 450).
         max_leaf_nodes: int, optional
-            The maximum number of leaf nodes for the trees (default is 63).
+            The maximum number of leaf nodes for the trees (default is 127).
         learning_rate: float, optional
-            The learning rate for the classifier (default is 0.1).
+            The learning rate for the classifier (default is 0.05).
         max_depth: int, optional
-            The maximum depth of the trees (default is 9).
+            The maximum depth of the trees (default is 20).
         min_samples_leaf: int, optional
-            The minimum number of samples required to be at a leaf node (default is 40).
+            The minimum number of samples required to be at a leaf node (default is 80).
         l2_regularization: float, optional
-            The L2 regularization parameter (default is 0.005).
+            The L2 regularization parameter (default is 3.5e-05).
         class_weight: dict or 'balanced', optional
             Weights associated with classes in the form {class_label: weight} or 'balanced' (default is None).
         early_stopping: bool, optional
