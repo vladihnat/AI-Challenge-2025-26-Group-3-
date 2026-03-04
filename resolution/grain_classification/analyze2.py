@@ -256,7 +256,7 @@ fig.patch.set_facecolor(BG)
 ax.set_facecolor(BG)
 
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=CLASSES)
-disp.plot(ax=ax, cmap="Purples", colorbar=True, values_format=".2f")
+disp.plot(ax=ax, cmap="Purples", cmap="Purples", values_format=".2f")
 ax.set_title("Model 2 - Normalized Confusion Matrix\n(ResNet18 from scratch, eval split)",
              fontsize=13, fontweight="bold", color="#111827", pad=12)
 ax.set_xlabel("Predicted variety", fontsize=11)
