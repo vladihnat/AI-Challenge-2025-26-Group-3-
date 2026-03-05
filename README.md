@@ -11,63 +11,83 @@ This repository contains a complete machine learning challenge focused on **Poll
 ## 🗂️ Repository Structure
 
 ```
-AI-Challenge-2025-26-Group-3-/
-│
-├── README.md                   # This file - project overview and structure
-├── split_data.py               # Utility script for cleaning and splitting original dataset into train/test sets
-│
-├── resolution/                # Resolution of another challenge
-│   ├── model.py               # Model used for submission
-│
-├── Starting_Kit/              # Participant starting resources
-│   ├── README.md              # Guide for getting started with the challenge
-│   └── README.ipynb           # Interactive Jupyter notebook with data exploration and baseline models
-│   └── scale_pos_weight_optimization.png
-│   └── data/
-|       ├── README.md          # Instruction for data
-│   └── sample_submission/
-|       ├── model.py           # Sample model implementation
-|       ├── requirements.txt   # File for required libraries
-│   └── submission/
-|       ├── Submission_Code_26-01-31-17-21.zip  # Sample submission
-│
-└── Competition_Bundle/        # Complete Codabench competition package
-    ├── competition.yaml       # Competition configuration for Codabench
-    ├── logo.png               # Competition logo
-    │
-    ├── ingestion_program/     # Loads data and runs participant models
-    │   ├── README.md          # Instructions for ingestion program
-    │   └── run_ingestion.py   # Main ingestion script
-    │   └── ingestion.py       # Ingestion script used by the main program
-    │   └── metadata.yml       # DO NOT MODIFY
-    │
-    ├── scoring_program/       # Evaluates model predictions
-    │   └── README.md          # Instructions for scoring program
-    │   └── run_scoring.py     # Main scoring script
-    │   └── score.py           # Scoring script used by the main program
-    │   └── metadata.yml       # DO NOT MODIFY
-    │
-    ├── input_data/            # Training and test data
-    │   └── README.md          # Instructions for input_data
-    │
-    ├── reference_data/        # Ground truth labels for evaluation
-    │   └── README.md          # Instructions for reference_data
-    │
-    ├── sample_code_submission/ # Example participant submission
-    │   └── model.py            # Sample model implementation
-    │
-    ├── sample_result_submission/ # Example prediction outputs
-    │   └── README.md             # Instructions
-    │
-    ├── pages/                 # Competition description pages (HTML/Markdown)
-    │   └── overview.md        # Overview page
-    │   └── terms.md           # Terms page
-    │   └── starting_kit.md    # Starting Kit page
-    │   └── data.md            # data.md
-    │   └── evaluation.md      # evaluation.md
-    │
-    └── utilities/             # Helper scripts and tools
-        └── compile_bundle.py  # Script to compile the competition bundle
+## Repository structure (arborescence)
+├── AI_Challenge_report (1).pdf
+├── Competition_Bundle
+│   ├── competition.yaml
+│   ├── ingestion_program
+│   │   ├── README.md
+│   │   ├── ingestion.py
+│   │   ├── metadata.yaml
+│   │   └── run_ingestion.py
+│   ├── input_data
+│   │   └── README.md
+│   ├── logo.png
+│   ├── pages
+│   │   ├── data.md
+│   │   ├── evaluation.md
+│   │   ├── overview.md
+│   │   ├── starting_kit.md
+│   │   └── terms.md
+│   ├── reference_data
+│   │   └── README.md
+│   ├── sample_code_submission
+│   │   ├── README.md
+│   │   ├── model.py
+│   │   ├── model1.py
+│   │   └── requirements.txt
+│   ├── sample_result_submission
+│   │   └── README.md
+│   ├── scoring_program
+│   │   ├── README.md
+│   │   ├── metadata.yaml
+│   │   ├── run_scoring.py
+│   │   └── score.py
+│   └── utilities
+│       └── compile_bundle.py
+├── Creation of An AI Challenge_ TemplateFinalPresentatio (Group 3)n.pdf
+├── README.md
+├── Starting_Kit
+│   ├── README.ipynb
+│   ├── README.md
+│   ├── best_model_probas.png
+│   ├── data
+│   │   └── README.md
+│   ├── sample_code_submission
+│   │   ├── analyze1.py
+│   │   ├── analyze2.py
+│   │   ├── ci1.png
+│   │   ├── ci2.png
+│   │   ├── conv1.png
+│   │   ├── conv2.png
+│   │   ├── matrix1.png
+│   │   ├── matrix2.png
+│   │   ├── model.py
+│   │   └── requirements.txt
+│   ├── scale_pos_weight_optimization.png
+│   └── submission
+│       └── Submission_Code_26-01-31-17-21.zip
+├── resolution
+│   ├── grain_classification
+│   │   ├── README.md
+│   │   ├── analyze1.py
+│   │   ├── analyze2.py
+│   │   ├── ci1.png
+│   │   ├── ci2.png
+│   │   ├── conv1.png
+│   │   ├── conv2.png
+│   │   ├── matrix1.png
+│   │   ├── matrix2.png
+│   │   ├── model.py
+│   │   └── model1.py
+│   └── pollinators_classification
+│       ├── analyze.py
+│       ├── ci_group4.png
+│       ├── conv_group4.png
+│       ├── matrix_group4.png
+│       └── model.py
+└── split_data.py
+```
 ```
 
 ---
