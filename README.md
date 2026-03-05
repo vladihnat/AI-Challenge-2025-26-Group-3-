@@ -11,8 +11,7 @@ This repository contains a complete machine learning challenge focused on **Poll
 ## 🗂️ Repository Structure
 
 ```
-## Repository structure (arborescence)
-├── AI_Challenge_report (1).pdf
+├── AI_Challenge_report.pdf
 ├── Competition_Bundle
 │   ├── competition.yaml
 │   ├── ingestion_program
@@ -45,7 +44,7 @@ This repository contains a complete machine learning challenge focused on **Poll
 │   │   └── score.py
 │   └── utilities
 │       └── compile_bundle.py
-├── Creation of An AI Challenge_ TemplateFinalPresentatio (Group 3)n.pdf
+├── slides.pdf
 ├── README.md
 ├── Starting_Kit
 │   ├── README.ipynb
